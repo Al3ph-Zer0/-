@@ -1,0 +1,82 @@
+#include<iostream>
+#include<vector>
+#include<queue>
+ 
+#define endl "\n"
+#define MAX 1010
+#define INF 987654321
+using namespace std;
+ 
+int N, M, Start, End;
+int Dist[MAX];
+int Route[MAX];
+vector<pair<int, int>> V[MAX];
+vector<int> Route_V;
+ 
+void Input()
+{
+    cin >> N >> M;
+    for (int i = 1; i <= N; i++) Dist[i] = INF;
+    for (int i = 0; i < M; i++)
+    {
+        int a, b, c; cin >> a >> b >> c;
+        V[a].push_back(make_pair(b, c));
+    }
+    cin >> Start >> End;
+}
+ 
+void Solution()
+{
+    priority_queue<pair<int, int>> PQ;
+    PQ.push(make_pair(0, Start));
+    Dist[Start] = 0;
+ 
+    while (PQ.empty() == 0)
+    {
+        int Cost = -PQ.top().first;
+        int Cur = PQ.top().second;
+        PQ.pop();
+ 
+        for (int i = 0; i < V[Cur].size(); i++)
+        {
+            int Next = V[Cur][i].first;
+            int nCost = V[Cur][i].second;
+ 
+            if (Dist[Next] > Cost + nCost)
+            {
+                Route[Next] = Cur;
+                Dist[Next] = Cost + nCost;
+                PQ.push(make_pair(-Dist[Next], Next));
+            }
+        }
+    }
+ 
+    cout << Dist[End] << endl;
+    int Temp = End;
+    while (Temp)
+    {
+        Route_V.push_back(Temp);
+        Temp = Route[Temp];
+    }
+    cout << Route_V.size() << endl;
+    for (int i = Route_V.size() - 1; i >= 0; i--) cout << Route_V[i] << " ";
+    cout << endl;
+ 
+}
+ 
+void Solve()
+{
+    Input();
+    Solution();
+}
+ 
+int main(void)
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+ 
+    Solve();
+ 
+    return 0;
+}
